@@ -30,7 +30,7 @@
 	- name: Object.  
  	- numArgs: Object.  
   	- operation: Operation object.  
-  		Each of these objects will contain the properties 'type', indicating what kind of value the object contains, and 'fallback', a value to be used if when creating the new object, it doesn't contain that key.
+  		Each of these objects will contain the properties 'type', indicating what kind of value the object contains, and 'fallback', a value to be used if when creating the new object, if it doesn't contain that key.
 
 3. **Schema validating function**: A function that compares the object passed with the squema.
 
@@ -84,7 +84,7 @@ The idea is that when schematizer is called with an operation object and the sch
 ### Challenge
 
 1. Have required and non-required fields.
-2. Remeber if an object was valid or not - maybe by storing them in different locations, or adding a property, or anything else you can think of.  
+2. Remember if an object was valid or not - maybe by storing them in different locations, or adding a property, or anything else you can think of.  
 3. Use this code to make your schematizer function a pure function:  
 
 // helper function that allows validator to be a pure function  
@@ -102,3 +102,102 @@ var opCopier = function(op) {
 ### The exercises it combines
 
 Fill this once the exercises are made.
+
+var add = {
+    name: "addition",
+    args: 2,
+    operation: function(a, b){
+        return a + b
+    }
+}
+
+var subtract = {
+    name: "subtraction",
+    operation: function(a,b){
+        return a - b
+    }
+}
+
+var squareRoot = {
+    args: 1,
+    operation: function(a){
+        return Math.sqrt(a);
+    }
+}
+
+var multiply = {
+    name: "multiply",
+    args: 2,
+    operation: "stegdfhh"
+}
+
+var sum3 = {
+    name: "sum3",
+    args: 3,
+    operation: function(){},
+    type: "something"
+}
+
+var scheme = {
+    name: {
+        type: "string",
+        fallback: "No Name"
+    },
+    numArgs: {
+        type: "number",
+        fallback: 25
+    },
+    operation: {
+        type: "function",
+        fallback: "FAIL"
+    },
+    info: {
+        type: "string",
+        fallback: "No info"
+    }
+}
+
+function schemaValidator (opObj, schema){
+    var arr = [];
+    var numKeysObj = Object.keys(opObj);
+    console.log(numKeysObj.length);
+    var numkeysSchema = Object.keys(schema);
+    console.log(numkeysSchema.length);
+    if (numKeysObj.length > numkeysSchema.length){
+        arr[0] = "Doesn't match schema";
+        arr[1] = opObj;
+    }
+    
+        else if (typeof(opObj.name) === schema.name.type){
+            if (typeof(opObj.args) === schema.numArgs.type){
+                if (typeof(opObj.operation) === schema.operation.type){
+                    arr[0] = "All good";
+                    arr[1] = opObj;
+                }else {
+                    arr[0] = "no operation, inserted default";
+                    opObj.operation = schema.operation.fallback;
+                    arr[1] = opObj;
+                }
+            }else {
+                arr[0] = "No arguments, inserted defaults";
+                opObj.args = schema.numArgs.fallback;
+                arr[1] = opObj;
+            }
+        }else {
+            arr[0] = "no name, inserted default";
+            opObj.name = schema.name.fallback;
+            arr[1] = opObj;
+        }
+    return arr
+}
+
+var comp = schemaValidator(add, scheme);
+console.log(comp);
+var comp2 = schemaValidator(squareRoot, scheme);
+console.log(comp2);
+var comp3 = schemaValidator(subtract, scheme);
+console.log(comp3);
+var comp4 = schemaValidator(multiply, scheme);
+console.log(comp4);
+var comp5 = schemaValidator(sum3, scheme);
+console.log(comp5);
