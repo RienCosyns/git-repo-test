@@ -1,4 +1,4 @@
-
+// object variables
 var add = {
     name: "addition",
     args: 2,
