@@ -35,6 +35,8 @@ var multiply = {
 //     //return arguments;
 // }
 
+// dynamic calculater object
+
 var dynamicCalculator = {
     operations: [],
     dynCalc: function(op){
